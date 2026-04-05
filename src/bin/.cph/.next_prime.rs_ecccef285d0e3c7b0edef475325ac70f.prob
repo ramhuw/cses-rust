@@ -1,0 +1,1 @@
+{"name":"Local: next_prime","url":"/Users/hechizhang/Projects/cses/src/bin/next_prime.rs","tests":[{"id":1775366872258,"input":"1\n5","output":"7"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/hechizhang/Projects/cses/src/bin/next_prime.rs","group":"local","local":true}
