@@ -45,29 +45,30 @@ impl SegTree {
                 n -= self.tree[i][k];
                 k = (k + 1) * 2;
             } else {
-                k = k * 2;
+                k *= 2;
             }
         }
         k / 2
     }
-
-    fn query(&self, a: usize, b: usize) -> usize {
-        let mut a = a;
-        let mut ans: usize = 0;
-        while a < b {
-            let mut k = (a.trailing_zeros() as usize).min(self.tree.len() - 1);
-            let mut l = 1 << k;
-            while a + l > b {
-                l >>= 1;
-                k -= 1;
-            }
-            let i = a / l;
-            ans = ans.add(self.tree[k][i]);
-            a = a + l;
-        }
-        ans
-    }
 }
+
 fn main() {
-    println!("Hello, world!");
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).unwrap();
+    let mut tokens = input
+        .split_whitespace()
+        .map(|x| x.parse::<usize>().unwrap());
+    let n = tokens.next().unwrap();
+    let k = tokens.next().unwrap();
+    let mut p: usize = 0;
+    let mut ans: String = String::default();
+    let table: Vec<usize> = vec![1; n];
+    let mut seg_tree = SegTree::new(n, table);
+    for i in (1..=n).rev() {
+        p = (p + k) % i;
+        let j = seg_tree.nth(p);
+        write!(ans, "{} ", j + 1).unwrap();
+        seg_tree.update(j, 0);
+    }
+    println!("{ans}");
 }

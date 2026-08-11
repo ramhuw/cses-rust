@@ -1,4 +1,5 @@
 use std::fmt::Write;
+use std::io::Read;
 use std::ops::Add;
 struct SegTree {
     tree: Vec<Vec<usize>>,
@@ -35,22 +36,6 @@ impl SegTree {
         }
     }
 
-    fn nth(&self, n: usize) -> usize {
-        let mut k = 0;
-        let mut n = n;
-        for i in (0..self.tree.len()).rev() {
-            if k >= self.tree[i].len() {
-                k *= 2;
-            } else if self.tree[i][k] <= n {
-                n -= self.tree[i][k];
-                k = (k + 1) * 2;
-            } else {
-                k = k * 2;
-            }
-        }
-        k / 2
-    }
-
     fn query(&self, a: usize, b: usize) -> usize {
         let mut a = a;
         let mut ans: usize = 0;
@@ -68,6 +53,31 @@ impl SegTree {
         ans
     }
 }
+
 fn main() {
-    println!("Hello, world!");
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).unwrap();
+    let mut tokens = input
+        .split_whitespace()
+        .map(|a| a.parse::<usize>().unwrap());
+    let n: usize = tokens.next().unwrap();
+    let q: usize = tokens.next().unwrap();
+    let mut x: Vec<usize> = vec![];
+    for _ in 0..n {
+        x.push(tokens.next().unwrap());
+    }
+    let mut seg_tree = SegTree::new(n, x);
+    let mut ans = String::new();
+    for _ in 0..q {
+        if tokens.next().unwrap() == 1 {
+            let k = tokens.next().unwrap();
+            let u = tokens.next().unwrap();
+            seg_tree.update(k - 1, u);
+        } else {
+            let a = tokens.next().unwrap();
+            let b = tokens.next().unwrap();
+            write!(ans, "{}\n", seg_tree.query(a - 1, b)).unwrap();
+        }
+    }
+    println!("{ans}");
 }
