@@ -68,6 +68,21 @@ impl SegTree {
         ans
     }
 }
+
+fn isqrt(n: usize) -> usize {
+    let mut left = 0;
+    let mut right = n;
+    while left < right {
+        let middle = (left + right + 1) / 2;
+        let middle_square = middle.saturating_mul(middle);
+        if middle_square <= n {
+            left = middle;
+        } else {
+            right = middle - 1;
+        }
+    }
+    left
+}
 fn main() {
     println!("Hello, world!");
 }
