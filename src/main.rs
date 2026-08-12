@@ -1,9 +1,17 @@
-use std::fmt::Write;
-use std::ops::Add;
+use std::{fmt::Write, io::Read};
+
+
+fn main() {
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).unwrap();
+    let mut tokens = input.split_whitespace();
+
+}
+
+use std::ops::{Add, Sub};
 struct SegTree {
     tree: Vec<Vec<usize>>,
 }
-
 impl SegTree {
     fn new(n: usize, arr: Vec<usize>) -> Self {
         let mut tree = vec![arr];
@@ -83,6 +91,43 @@ fn isqrt(n: usize) -> usize {
     }
     left
 }
-fn main() {
-    println!("Hello, world!");
+
+struct FenwickTree<T: Add<Output=T> + Copy + Default> {
+    tree: Vec<T>
+}
+
+impl<T: Add<Output=T> + Copy + Default> FenwickTree<T> {
+    fn new(arr: Vec<T>) -> Self {
+        let n = arr.len();
+        let mut tree = arr;
+        for i in 1..=n {
+            let parent = i + (i & i.wrapping_neg());
+            if parent <= n {
+                tree[parent-1] = tree[parent-1].add(tree[i-1]);
+            }
+        }
+        Self {
+            tree
+        }
+    }
+
+    fn sum(&self, k: usize) -> T {
+        let mut i = k;
+        let mut s = T::default();
+        while i != 0 {
+            s = s.add(self.tree[i-1]);
+            i -= i & i.wrapping_neg();
+        }
+        s
+    }
+
+    fn add(&mut self, k: usize, a: T) {
+        let mut i = k + 1;
+        
+        let n = self.tree.len();
+        while i <= n {
+            self.tree[i-1] = self.tree[i-1].add(a);
+            i += i & i.wrapping_neg();
+        }
+    }
 }
